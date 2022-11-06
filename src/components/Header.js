@@ -8,7 +8,11 @@ const Header = () => {
     useEffect(() => {
         if (location.pathname === "/cars") {
             setShowButton(false);
-        } else {
+        } 
+        else if (location.pathname === "/login") {
+            setShowButton(false);
+        } 
+        else {
             setShowButton(true);
         }
     }, [location.pathname]);

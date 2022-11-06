@@ -9,6 +9,9 @@ import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
 import CariMobil from './pages/Search';
 
+// Import Components
+import { Login, Protected} from './components';
+
 // Redux
 import { createStore, compose, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux';
@@ -24,9 +27,18 @@ root.render(
       <BrowserRouter>
         <Navbar />
         <Header />
-        <Routes>
+        {/* <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/cars" element={<CariMobil />}></Route>
+        </Routes> */}
+        <Routes>
+        <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/cars" element={
+            <Protected>
+              <CariMobil />
+            </Protected>}
+          />
+          <Route path='/login' element={<Login />} />
         </Routes>
         <Footer />
       </BrowserRouter>
