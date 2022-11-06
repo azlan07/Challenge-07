@@ -137,6 +137,7 @@ const Filter = () => {
             </div>
           </div>
         </div>
+        
         <div className="row mt-5" id="carContainerList">
           {displayCars.length > 0 ? (
             displayCars.map((item) => (
@@ -155,7 +156,7 @@ const Filter = () => {
             ))
           ) : (
             <div className="text-center">
-              <h1>Data Mobil Kosong</h1>
+              <h1>Belum ada data</h1>
             </div>
           )}
         </div>

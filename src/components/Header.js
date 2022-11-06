@@ -1,17 +1,6 @@
-import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 const Header = () => {
-    const location = useLocation()
-    const [showButton, setShowButton] = useState()
-
-    useEffect(() => {
-        if (location.pathname === "/cars") {
-            setShowButton(false);
-        } else {
-            setShowButton(true);
-        }
-    }, [location.pathname]);
     return (
         <section style={{ backgroundColor: "#f1f3ff" }} id="main">
             <div className="container-fluid" style={{ paddingTop: "80px" }}>
@@ -22,13 +11,7 @@ const Header = () => {
                             Selamat datang di Binar Car Rental. Kami menyediakan mobil kualitas terbaik dengan harga
                             terjangkau. Selalu siap melayani kebutuhanmu untuk sewa mobil selama 24 jam.
                         </p>
-                        {
-                            showButton ? (
-                                <a href="/cars"><button class="btn btn-success">Mulai Sewa Mobil</button></a>
-                            ) : (
-                                <></>
-                            )
-                        }
+                        <Link to="/cars"><button class="btn btn-success">Mulai Sewa Mobil</button></Link>
 
                     </div>
                     <div className="col-lg-6 col-md-12" style={{ padding: "0" }}>

@@ -7,19 +7,32 @@ import Navbar from './components/Navbar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
-import CariMobil from './pages/CariMobil';
+import CariMobil from './pages/Search';
+
+// Redux
+import { createStore, compose, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import reducers from './reducers'
+
+const store = createStore(reducers, compose(applyMiddleware(thunk)))
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Navbar />
-    <Header />
-    <Routes>
-      <Route path="/" element={<LandingPage/>}></Route>
-      <Route path="/cars" element={<CariMobil/>}></Route>
-    </Routes>
-    <Footer />
-  </BrowserRouter>
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Navbar />
+        <Header />
+        <Routes>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/cars" element={<CariMobil />}></Route>
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
+
 );
 
 // If you want to start measuring performance in your app, pass a function
