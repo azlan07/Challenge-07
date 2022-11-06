@@ -1,168 +1,100 @@
-import React, { useState, useEffect } from "react";
+import ListCars from './ListCars';
+import * as React from 'react';
 
-const Filter = () => {
-  const [cars, setCars] = useState([]);
-  const [displayCars, setDisplayCars] = useState([]);
-  const [driverType, setDriverType] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [capacity, setCapacity] = useState("");
+function refreshPage() {
+  window.location.reload()
+}
 
-  useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/fnurhidayat/probable-garbanzo/main/data/cars.min.json"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setCars(data);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
-  }, []);
-
-  function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  const populateCars = (cars) => {
-    return cars.map((car) => {
-      const isPositive = getRandomInt(0, 1) === 1;
-      const timeAt = new Date();
-      const mutator = getRandomInt(1000000, 100000000);
-      const availableAt = new Date(timeAt.getTime() + (isPositive ? mutator : -1 * mutator))
-
-      return {
-        ...car,
-        availableAt,
-      };
-    })
-  }
-
-  const handleSearchCar = () => {
-    const carsPopulate = populateCars(cars);
-    console.log(carsPopulate);
-    const today = new Date();
-    const newDateTime = new Date(`${date} ${time}`);
-
-    if (driverType === "") {
-      alert("Please select driver type");
-      return;
-    } else if (!date) {
-      alert("Please select date");
-      return;
-    } else if (newDateTime < today) {
-      alert("Dont select past time");
-      return;
+class Search extends React.Component{
+    constructor(pros) {
+      super(pros);
+      this.state = {tipedriver: '',jumlahpenumpang:'',tanggal: '', waktu: ''}
+      this.handleChange = this.handleChange.bind(this)
+      this.handleSubmit = this.handleSubmit.bind(this)
+      this.Hapus = this.Hapus.bind(this)
+      this.data = this.data.bind(this)
     }
-    const filterCars = carsPopulate.filter((item) => item.capacity >= capacity && item.availableAt >= newDateTime);
-    setDisplayCars(filterCars);
-  };
 
-  const handleReset = () => {
-    setDisplayCars([]);
-    setDriverType("");
-    setDate("");
-    setTime("");
-    setCapacity("");
-  };
+    handleChange(event) {
+      const value = event.target.value
+      const name = event.target.name
+      this.setState({[name] : value})
+    }
 
-  return (
-    <section id="cariMobil">
-      <div className="container px-lg-5">
-        <div className="d-lg-flex py-4 px-3 rounded-3 shadow bg-white">
-          <div className="flex-fill">
-            <div className="row me-2">
-              <div className="col-sm-12 col-lg-3 mt-2">
-                <p>Tipe Driver</p>
-                <select className="form-select" id="driver" onChange={(e) => setDriverType(e.target.value)} >
-                  <option value={driverType} hidden> Pilih Tipe Driver </option>
-                  <option value="1">Dengan Sopir</option>
-                  <option value="2">Tanpa Sopir (Lepas Kunci)</option>
-                </select>
-              </div>
-              <div className="col-sm-12 col-lg-3 mt-2">
-                <p>Tanggal</p>
-                <input
-                  type="date"
-                  value={date}
-                  className="form-control"
-                  placeholder="Pilih Tanggal"
-                  id="filterDate"
-                  onChange={(e) => setDate(e.target.value)}
-                />
-              </div>
-              <div className="col-sm-12 col-lg-3 mt-2">
-                <p>Waktu Jemput/Ambil</p>
-                <input
-                  type="time"
-                  value={time}
-                  className="form-control"
-                  placeholder="Pilih Tanggal"
-                  id="filterTime"
-                  onChange={(e) => setTime(e.target.value)}
-                />
-              </div>
-              <div className="col-sm-12 col-lg-3 mt-2">
-                <p>Jumlah Penumpang (optional)</p>
-                <input
-                  type="number"
-                  value={capacity}
-                  className="form-control"
-                  placeholder="Jumlah Penumpang"
-                  id="filterCapacity"
-                  onChange={(e) => setCapacity(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="mt-3 align-self-end">
-            <div className="d-flex justify-content-center">
-              <button
-                className="text-nowrap me-2"
-                id="btn-search"
-                onClick={handleSearchCar}
-              >
-                Cari Mobil
-              </button>
-              <button
-                className="btn btn-danger rounded-0"
-                id="btn-clear"
-                onClick={handleReset}
-              >
-                Clear
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <div className="row mt-5" id="carContainerList">
-          {displayCars.length > 0 ? (
-            displayCars.map((item) => (
-              <div className="col-lg-4 mt-2 d-flex align-items-stretch" key={item.id}>
-                <div className="card p-4">
-                  <img src={item.image} alt="car" className="m-3 rounded" />
-                  <p className="mt-auto">{item.model}/{item.manufacture}</p>
-                  <p className="fw-bold fs-6">Rp{item.rentPerDay}</p>
-                  <p>{item.description}</p>
-                  <p><i className="bi bi-people"></i>{item.capacity} Orang</p>
-                  <p><i className="bi bi-people"></i>{item.transmission}</p>
-                  <p><i className="bi bi-people"></i>{item.year}</p>
-                  <button>Pilih Mobil</button>
+    handleSubmit(event) {
+      event.preventDefault()
+
+      console.log(this.state.tipedriver);
+      console.log(this.state.jumlahpenumpang);
+      console.log(this.state.tanggal);
+      console.log(this.state.waktu);
+    }
+
+    Hapus() {
+      return 2
+    }
+
+    data(event) {
+      event.preventDefault()
+      const jumlahpenumpang = this.state.jumlahpenumpang
+      console.log("Jumlah : " + jumlahpenumpang);
+      const data1 = [this.state.jumlahpenumpang, this.state.tipedriver, this.state.tanggal, this.state.waktu]
+
+      return data1
+    }
+
+  render(){
+
+      return(
+        <>
+          <section>
+            <form onSubmit={this.handleSubmit}>
+                <div className="container px-lg-5">
+                  <div className="row">
+                    <div className="d-lg-flex py-4 px-3 rounded-3 shadow bg-white">
+                            <div className="col mt-2">
+                                <label className="label">Tipe Driver</label>
+                                <select className="form-select" id="tipe-driver" name="tipedriver" value={this.state.value} onChange={this.handleChange} style={{width: '95%'}}>
+                                  <option value="">Pilih Tipe Driver</option>
+                                  <option value="true">Dengan Sopir</option>
+                                  <option value="false">Tanpa Sopir (Lepas Tangan)</option>
+                                </select>
+                            </div>
+                            <div className="col mt-2">
+                              <label className="label">Tanggal</label>
+                              <div className="input-group" style={{width: '95%'}}>
+                                <input type="date" name="tanggal" value={this.state.tanggal} onChange={this.handleChange} className="form-control" id="select-tanggal" placeholder="Pilih Tanggal"/>
+                              </div>
+                            </div>
+                            <div className="col mt-2">
+                              <label className="label">Waktu Jemput/Ambil</label>
+                              <div className="input-group" style={{width: '95%'}}>
+                                <input type="time" name="waktu" value={this.state.waktu} onChange={this.handleChange} id="select-jam" className="form-control" placeholder="Pilih Tanggal"/>
+                              </div>
+                            </div>
+
+                            <div className="col mt-2">
+                              <label className="label">Jumlah Penumpang</label>
+                              <div className="input-group" style={{width: '95%'}}>
+                                <input type="text" id="select-jml" value={this.state.jumlahpenumpang} onChange={this.handleChange} name="jumlahpenumpang" className="form-control" placeholder="Jumlah Penumpang"/>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="col">
+                                <button className="btn btn-sm btn-success p-2  my-4 mx-3" id="load-btn" name="submit"> Cari Mobil</button>
+                                <button className="btn btn-sm btn-outline-danger p-2 my-4 mx-3" onClick={refreshPage} id="clear-btn"> Clear Mobil</button>
+                              </div>
+                            </div>
+                    </div>
+                  </div>    
                 </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center">
-              <h1>Belum ada data</h1>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-};
+            </form>
+        </section>
 
-export default Filter;
+        <ListCars submit={this.handleSubmit} data={this.data} jumlahpenumpang={this.state.jumlahpenumpang} tipedriver={this.state.tipedriver} tanggal={this.state.tanggal} waktu={this.state.waktu}/>
+
+      </>
+      )
+  }
+}
+export default Search
